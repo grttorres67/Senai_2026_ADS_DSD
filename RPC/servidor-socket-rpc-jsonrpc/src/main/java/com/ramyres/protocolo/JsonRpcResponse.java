@@ -5,4 +5,5 @@ public class JsonRpcResponse {
     public long id;
     public String jsonRpc;
     public Object result;
+    public JsonRpcError error;
 }

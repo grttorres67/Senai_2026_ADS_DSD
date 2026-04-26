@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import com.ramyres.servicos.PalavrasService;
 
-public class PalavraServiceTest {
+public class PalavrasServiceTest {
     @Test
     public void testContarLetras() {
         PalavrasService service = new PalavrasService();

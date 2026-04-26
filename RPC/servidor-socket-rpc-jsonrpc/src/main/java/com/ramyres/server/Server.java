@@ -6,12 +6,13 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-
 import com.google.gson.Gson;
+
 import com.ramyres.protocolo.JsonRpcError;
 import com.ramyres.protocolo.JsonRpcRequest;
 import com.ramyres.protocolo.JsonRpcResponse;
 import com.ramyres.servicos.BaskaraService;
+import com.ramyres.servicos.PalavrasService;
 
 public class Server {
     public void Run(int port) throws IOException {
@@ -25,14 +26,13 @@ public class Server {
     private void handleClient(Socket socket) {
         try (
             Socket s = socket; 
-            BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
-            PrintWriter out = new PrintWriter(s.getOutputStream(), true)
+            BufferedReader entrada = new BufferedReader(new InputStreamReader(s.getInputStream()));
+            PrintWriter saida = new PrintWriter(s.getOutputStream(), true)
         ) {
-            String request = in.readLine();
-            
+            String request = entrada.readLine();
             if (request != null) {
                 String response = handleRequest(request);
-                out.println(response);
+                saida.println(response);
                 s.close();
             }
         }
@@ -41,31 +41,37 @@ public class Server {
         }
     }
 
-    private String handleRequest(String request) {
+    public String handleRequest(String request) {
         Gson gson = new Gson();
+        
         try {
             JsonRpcRequest rpcRequest = gson.fromJson(request, JsonRpcRequest.class);
+            
             String method = rpcRequest.method;
             String[] params = rpcRequest.params;
-
-            String [] resultados;
-            switch (method) {
-                case "baskara":
-                    String [] aux = new BaskaraService().Run(params);
-                    resultados = aux;
-                    break;
-                default:
-                    resultados = new String[0];
-                    break;
-            }
             
             JsonRpcResponse rpcResponse = new JsonRpcResponse();
             rpcResponse.id = rpcRequest.id;
-            rpcResponse.result = resultados;
+            rpcResponse.result = new String[0]; // Valor padrão para o resultado
+
+            switch (method) {
+                case "baskara":
+                    String [] auxB = new BaskaraService().Run(params);
+                    rpcResponse.result = auxB;
+                    break;
+                case "palavras":
+                    String [] auxP = new PalavrasService().Run(params);
+                    rpcResponse.result = auxP;
+                    break;
+                default:
+                    rpcResponse.error = new JsonRpcError(-32601, "Method not found: " + method);
+                    break;
+            }
+            
             return gson.toJson(rpcResponse);
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
             JsonRpcResponse rpcResponse = new JsonRpcResponse();
             rpcResponse.error = new JsonRpcError(){
                 {

@@ -1,5 +1,12 @@
 package com.ramyres.servicos;
 
+/*
+Pesquise sobre os metodos e escolha um
+    * Método de Arquimedes
+    * Método de Chudnovsky
+    * Método de Leibniz
+    * Método de Machin
+*/
 public class PiService implements ServiceInterface {
     @Override
     public String[] Run(String[] params) {

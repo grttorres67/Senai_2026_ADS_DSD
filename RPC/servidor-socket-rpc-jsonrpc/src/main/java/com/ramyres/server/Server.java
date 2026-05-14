@@ -13,6 +13,7 @@ import com.ramyres.protocolo.JsonRpcRequest;
 import com.ramyres.protocolo.JsonRpcResponse;
 import com.ramyres.servicos.BaskaraService;
 import com.ramyres.servicos.PalavrasService;
+import com.ramyres.servicos.PiService;
 
 public class Server {
     public void Run(int port) throws IOException {
@@ -62,6 +63,10 @@ public class Server {
                 case "palavras":
                     String [] auxP = new PalavrasService().Run(params);
                     rpcResponse.result = auxP;
+                    break;
+                case "pi":
+                    String [] auxPi = new PiService().Run(params);
+                    rpcResponse.result = auxPi;
                     break;
                 default:
                     rpcResponse.error = new JsonRpcError(-32601, "Method not found: " + method);

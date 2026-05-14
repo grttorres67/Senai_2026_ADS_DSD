@@ -23,8 +23,14 @@ public class ServidorDeCalculoApi implements ClienteDeCalculoFolhaInterface {
         super();
     }
 
+    private static boolean useSecondServer = false;
+
     private void conectar() throws IOException {
-        this.cliente = new Socket(JsonRPCConfig.JSON_RPC_SERVER_HOST, (int) JsonRPCConfig.JSON_RPC_SERVER_PORT);
+        String host = useSecondServer ? JsonRPCConfig.JSON_RPC_SERVER_HOST2 : JsonRPCConfig.JSON_RPC_SERVER_HOST;
+        int port = useSecondServer ? (int) JsonRPCConfig.JSON_RPC_SERVER_PORT2 : (int) JsonRPCConfig.JSON_RPC_SERVER_PORT;
+        useSecondServer = !useSecondServer;
+
+        this.cliente = new Socket(host, port);
         this.saida = new PrintWriter(cliente.getOutputStream(), true);
         this.entrada = new BufferedReader(new InputStreamReader(cliente.getInputStream()));
     }

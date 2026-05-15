@@ -1,0 +1,18 @@
+graph TD
+    A[Web App - Vue.js] -->|HTTP REST| B(Web API - Spring Boot)
+    B -->|JSON-RPC sobre Sockets TCP| C(Servidor de Cálculos)
+    B -->|Java RMI| D(Servidor de Dados)
+    C -->|Java RMI| D
+    D -->|JDBC / Arquivos| E[(Persistência)]
+    
+    classDef frontend fill:#41B883,stroke:#35495E,stroke-width:2px,color:#fff;
+    classDef api fill:#6DB33F,stroke:#2b4a1b,stroke-width:2px,color:#fff;
+    classDef calc fill:#F4A261,stroke:#E76F51,stroke-width:2px,color:#fff;
+    classDef data fill:#2A9D8F,stroke:#264653,stroke-width:2px,color:#fff;
+    classDef db fill:#E9C46A,stroke:#F4A261,stroke-width:2px,color:#000;
+
+    class A frontend;
+    class B api;
+    class C calc;
+    class D data;
+    class E db;
